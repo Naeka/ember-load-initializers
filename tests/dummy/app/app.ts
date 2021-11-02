@@ -22,6 +22,6 @@ const App = Application.extend({
   },
 });
 
-loadInitializers(App, config.modulePrefix);
+loadInitializers(App, config.modulePrefix, () => true);
 
 export default App;

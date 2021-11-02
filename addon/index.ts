@@ -41,7 +41,8 @@ function _endsWith(str: string, suffix: string): boolean {
 /**
  * Configure your application as it boots
  */
-export default function loadInitializers(app: typeof Engine, prefix: string): void {
+export default function loadInitializers(app: typeof Engine, prefix: string, shouldLoad: any): void {
+  shouldLoad = shouldLoad ?? (() => true);
   var initializerPrefix = prefix + '/initializers/';
   var instanceInitializerPrefix = prefix + '/instance-initializers/';
   var initializers = [];
@@ -53,11 +54,15 @@ export default function loadInitializers(app: typeof Engine, prefix: string): vo
     var moduleName = moduleNames[i];
     if (moduleName.lastIndexOf(initializerPrefix, 0) === 0) {
       if (!_endsWith(moduleName, '-test')) {
-        initializers.push(moduleName);
+        if (shouldLoad(moduleName)) {
+          initializers.push(moduleName);
+        }
       }
     } else if (moduleName.lastIndexOf(instanceInitializerPrefix, 0) === 0) {
       if (!_endsWith(moduleName, '-test')) {
-        instanceInitializers.push(moduleName);
+        if (shouldLoad(moduleName)) {
+          instanceInitializers.push(moduleName);
+        }
       }
     }
   }
